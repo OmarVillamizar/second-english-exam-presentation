@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Second Exam — English Conversational. A technical demonstration of agentic AI (Claude Code) producing professional frontend code.">
+<meta property="og:title" content="Second Exam — English Conversational">
+<meta property="og:description" content="Presentation by Juan Afanador &amp; Omar Villamizar — Universidad Francisco de Paula Santander. Built with Claude Code · Agentic AI Demo.">
+<title>Second Exam — English Conversational</title>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-elevated: rgba(255,255,255,0.04);
+  --text: #ffffff;
+  --text-muted: rgba(255,255,255,0.55);
+  --accent: #4f9eff;
+  --accent-dim: rgba(79,158,255,0.2);
+  --border-ghost: rgba(255,255,255,0.08);
+  --card-bg: rgba(255,255,255,0.06);
+  --card-border: rgba(255,255,255,0.1);
+  --nav-bg: rgba(10,14,26,0.7);
+  --hud-bg: rgba(10,14,26,0.85);
+  --thumb-active: #4f9eff;
+  --thumb-inactive: rgba(255,255,255,0.5);
+  --progress-track: rgba(255,255,255,0.12);
+  --radius: 12px;
+  --radius-sm: 6px;
+  --transition-fast: 200ms ease;
+  --transition-slide: 400ms ease;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 40px;
+  --spacing-xl: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: var(--accent); text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ── SVG Background Pattern ── */
+.bg-pattern {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(79,158,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(79,158,255,0.04) 0%, transparent 50%),
+    var(--bg);
+}
+.bg-pattern::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ── Section Container ── */
+.section { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; overflow: hidden; }
+.section--hidden { display: none; }
+
+/* ══════ COVER ══════ */
+.cover { align-items: center; justify-content: center; }
+.cover__inner { position: relative; z-index: 2; text-align: center; padding: var(--spacing-md); max-width: 720px; width: 100%; }
+.cover__uni {
+  font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: var(--spacing-sm);
+}
+.cover__title {
+  font-size: clamp(28px, 5vw, 48px); font-weight: 700; line-height: 1.15;
+  margin-bottom: var(--spacing-lg);
+}
+.cover__cards { display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap; margin-bottom: var(--spacing-lg); }
+.cover__card {
+  flex: 1 1 220px; max-width: 280px;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius);
+  padding: var(--spacing-md) var(--spacing-sm); text-align: center;
+}
+.cover__card-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.cover__card-id { font-size: 13px; color: var(--text-muted); }
+.cover__cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: var(--radius);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.cover__cta:hover { background: #3d8eef; transform: scale(1.03); }
+.cover__cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cover__badge {
+  margin-top: var(--spacing-lg); font-size: 12px; color: var(--text-muted);
+  border: 1px solid var(--border-ghost); border-radius: 99px; padding: 6px 16px; display: inline-block;
+}
+
+/* ── Cover Staggered Entrances ── */
+.cover [data-animate] { opacity: 0; transform: translateY(24px); }
+.cover--ready [data-animate] { animation: fadeSlideUp 600ms ease forwards; }
+.cover--ready [data-animate="1"] { animation-delay: 100ms; }
+.cover--ready [data-animate="2"] { animation-delay: 250ms; }
+.cover--ready [data-animate="3"] { animation-delay: 400ms; }
+.cover--ready [data-animate="4"] { animation-delay: 550ms; }
+.cover--ready [data-animate="5"] { animation-delay: 700ms; }
+@keyframes fadeSlideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════ SLIDESHOW ══════ */
+.slideshow { background: var(--bg); }
+.slideshow__main { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.slideshow__slide {
+  position: absolute; inset: var(--spacing-lg);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(1.02); transition: opacity var(--transition-slide), transform var(--transition-slide);
+  will-change: transform, opacity;
+}
+.slideshow__slide--active {
+  opacity: 1; transform: scale(1);
+}
+.slideshow__slide--exit {
+  transform: scale(0.98);
+}
+.slideshow__slide img {
+  max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius-sm);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.slideshow__slide-num {
+  position: absolute; top: -8px; right: -8px;
+  background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(0.6); transition: opacity 300ms ease 100ms, transform 300ms ease 100ms;
+}
+.slideshow__slide--active .slideshow__slide-num { opacity: 1; transform: scale(1); }
+
+/* ── Navigation Arrows ── */
+.nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+  width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;
+  background: var(--nav-bg); border-radius: 50%;
+  opacity: 0.4; transition: opacity var(--transition-fast), background var(--transition-fast);
+}
+.nav-btn:hover { opacity: 1; background: rgba(10,14,26,0.9); }
+.nav-btn:focus-visible { opacity: 1; outline: 2px solid var(--accent); outline-offset: 2px; }
+.nav-btn svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.nav-btn--prev { left: 16px; }
+.nav-btn--next { right: 16px; }
+
+/* ── HUD Bar ── */
+.hud {
+  display: flex; align-items: center; gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--hud-bg); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-ghost);
+}
+.hud__counter { font-size: 14px; font-weight: 600; white-space: nowrap; min-width: 50px; }
+.hud__progress-wrap { flex: 1; height: 3px; background: var(--progress-track); border-radius: 2px; overflow: hidden; }
+.hud__progress { height: 100%; background: var(--accent); border-radius: 2px; transition: width 300ms ease; width: 0; }
+.hud__back {
+  font-size: 13px; color: var(--text-muted); white-space: nowrap; transition: color var(--transition-fast);
+}
+.hud__back:hover { color: var(--accent); }
+
+/* ── Thumbnail Strip ── */
+.thumbs { display: flex; gap: 8px; padding: var(--spacing-sm) var(--spacing-md); justify-content: center; overflow-x: auto; }
+.thumbs__item {
+  flex-shrink: 0; width: 64px; height: 48px; border-radius: var(--radius-sm); overflow: hidden;
+  opacity: 0.5; border: 2px solid transparent; cursor: pointer;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast);
+}
+.thumbs__item:hover { opacity: 0.8; }
+.thumbs__item--active { opacity: 1; border-color: var(--thumb-active); }
+.thumbs__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<!-- ═══════════════════ SECTION 1: COVER ═══════════════════ -->
+<section class="section cover" id="coverSection">
+  <div class="cover__inner">
+    <p class="cover__uni" data-animate="1">Universidad Francisco de Paula Santander</p>
+    <h1 class="cover__title" data-animate="2">Second Exam — English Conversational</h1>
+    <div class="cover__cards" data-animate="3">
+      <div class="cover__card">
+        <div class="cover__card-name">Juan Afanador</div>
+        <div class="cover__card-id">ID 1152247</div>
+      </div>
+      <div class="cover__card">
+        <div class="cover__card-name">Omar Villamizar</div>
+        <div class="cover__card-id">ID 1152239</div>
+      </div>
+    </div>
+    <div data-animate="4">
+      <button class="cover__cta" id="startBtn" aria-label="Start presentation">Start Presentation <span aria-hidden="true">&rarr;</span></button>
+    </div>
+    <div class="cover__badge" data-animate="5">Built with Claude Code · Agentic AI Demo</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 2: SLIDESHOW ═══════════════════ -->
+<section class="section section--hidden" id="slideshowSection">
+  <div class="slideshow__main" id="slideArea" aria-live="polite" aria-label="Presentation slideshow">
+    <!-- slides injected by JS -->
+  </div>
+  <button class="nav-btn nav-btn--prev" id="prevBtn" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><polyline points="15 4 7 12 15 20"/></svg>
+  </button>
+  <button class="nav-btn nav-btn--next" id="nextBtn" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><polyline points="9 4 17 12 9 20"/></svg>
+  </button>
+  <div class="thumbs" id="thumbsStrip" role="tablist" aria-label="Slide thumbnails"></div>
+  <div class="hud">
+    <span class="hud__counter" id="slideCounter">1 / 8</span>
+    <div class="hud__progress-wrap"><div class="hud__progress" id="progressBar"></div></div>
+    <button class="hud__back" id="backBtn">&larr; Back to Cover</button>
+  </div>
+</section>
+
+<script>
+(function () {
+'use strict';
+
+const SLIDE_FILES = [
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx.png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (1).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (2).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (3).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (4).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (5).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (6).png',
+  'PRESENTATION IMAGES/ENGLISH CONVERSATIONAL AI - AFANADOR OMAR.pptx (7).png'
+];
+
+const TOTAL = SLIDE_FILES.length;
+let currentIdx = 0;
+let isTransitioning = false;
+
+/* ── DOM refs ── */
+const coverSection = document.getElementById('coverSection');
+const slideshowSection = document.getElementById('slideshowSection');
+const slideArea = document.getElementById('slideArea');
+const thumbsStrip = document.getElementById('thumbsStrip');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const startBtn = document.getElementById('startBtn');
+const slideCounter = document.getElementById('slideCounter');
+const progressBar = document.getElementById('progressBar');
+const body = document.body;
+
+const slideEls = [];
+const thumbEls = [];
+
+/* ── Build slides & thumbs ── */
+function buildSlides() {
+  const frag = document.createDocumentFragment();
+  SLIDE_FILES.forEach(function (file, i) {
+    var slide = document.createElement('div');
+    slide.className = 'slideshow__slide';
+    slide.setAttribute('role', 'group');
+    slide.setAttribute('aria-label', 'Slide ' + (i + 1) + ' of ' + TOTAL);
+    slide.setAttribute('data-index', i);
+
+    var img = document.createElement('img');
+    img.setAttribute('data-src', file);
+    img.alt = 'Slide ' + (i + 1) + ' — ' + file.replace(/^.*[\\/]/, '').replace(/\.(pptx\.)?png$/i, '');
+    if (i === 0) {
+      img.src = file;
+    }
+    slide.appendChild(img);
+
+    var num = document.createElement('span');
+    num.className = 'slideshow__slide-num';
+    num.textContent = i + 1;
+    slide.appendChild(num);
+
+    frag.appendChild(slide);
+    slideEls.push(slide);
+  });
+  slideArea.appendChild(frag);
+
+  var thumbFrag = document.createDocumentFragment();
+  SLIDE_FILES.forEach(function (file, i) {
+    var item = document.createElement('button');
+    item.className = 'thumbs__item';
+    item.setAttribute('role', 'tab');
+    item.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    item.setAttribute('data-index', i);
+
+    var timg = document.createElement('img');
+    timg.setAttribute('data-src', file);
+    timg.alt = 'Thumbnail slide ' + (i + 1);
+    if (i === 0) {
+      timg.src = file;
+    }
+    item.appendChild(timg);
+
+    if (i === 0) item.classList.add('thumbs__item--active');
+    item.addEventListener('click', function () { goTo(parseInt(this.getAttribute('data-index'), 10)); });
+
+    thumbsStrip.appendChild(item);
+    thumbEls.push(item);
+  });
+}
+
+/* ── Lazy loading with IntersectionObserver ── */
+function setupLazyLoader() {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var target = entry.target;
+      var imgs = target.tagName === 'IMG' ? [target] : Array.prototype.slice.call(target.querySelectorAll('img[data-src]'));
+      imgs.forEach(function (img) {
+        var src = img.getAttribute('data-src');
+        if (!src) return;
+        img.src = src;
+        img.removeAttribute('data-src');
+      });
+      if (target.classList.contains('slideshow__slide')) {
+        observer.unobserve(target);
+      }
+    });
+  }, { rootMargin: '200%', threshold: 0.01 });
+
+  slideEls.forEach(function (s) { observer.observe(s); });
+  thumbEls.forEach(function (t) {
+    var img = t.querySelector('img');
+    if (img && img.hasAttribute('data-src')) observer.observe(img);
+  });
+}
+
+/* ── Preload adjacent slide ── */
+function preloadAdjacent(idx) {
+  var prevI = idx - 1;
+  var nextI = idx + 1;
+  [prevI, nextI].forEach(function (i) {
+    if (i < 0 || i >= TOTAL) return;
+    var img = slideEls[i].querySelector('img');
+    if (img && img.hasAttribute('data-src')) {
+      img.src = img.getAttribute('data-src');
+      img.removeAttribute('data-src');
+    }
+  });
+  // preload thumbnail too
+  [prevI, nextI].forEach(function (i) {
+    if (i < 0 || i >= TOTAL) return;
+    var tImg = thumbEls[i].querySelector('img');
+    if (tImg && tImg.hasAttribute('data-src')) {
+      tImg.src = tImg.getAttribute('data-src');
+      tImg.removeAttribute('data-src');
+    }
+  });
+}
+
+/* ── Preload via <link> ── */
+function preloadImage(src) {
+  var link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = src;
+  document.head.appendChild(link);
+}
+
+/* ── HUD update ── */
+function updateHUD(idx) {
+  slideCounter.textContent = (idx + 1) + ' / ' + TOTAL;
+  progressBar.style.width = ((idx + 1) / TOTAL * 100) + '%';
+}
+
+/* ── Render slide ── */
+function renderSlide(idx, direction) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  var oldSlide = slideEls[currentIdx];
+  var newSlide = slideEls[idx];
+
+  // remove active from all
+  slideEls.forEach(function (s) { s.classList.remove('slideshow__slide--active', 'slideshow__slide--exit'); });
+
+  // set will-change for transition
+  if (oldSlide) oldSlide.style.willChange = 'transform, opacity';
+  newSlide.style.willChange = 'transform, opacity';
+
+  // set exit direction on old
+  if (oldSlide) {
+    oldSlide.classList.add('slideshow__slide--exit');
+  }
+
+  // activate new
+  newSlide.classList.add('slideshow__slide--active');
+
+  // ensure new slide img loaded
+  var img = newSlide.querySelector('img');
+  if (img && img.hasAttribute('data-src')) {
+    img.src = img.getAttribute('data-src');
+    img.removeAttribute('data-src');
+  }
+
+  // thumbnails
+  thumbEls.forEach(function (t, i) {
+    t.classList.toggle('thumbs__item--active', i === idx);
+    t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+  });
+
+  currentIdx = idx;
+  updateHUD(idx);
+  preloadAdjacent(idx);
+
+  // scroll thumb into view
+  if (thumbEls[idx]) {
+    thumbEls[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  // focus management
+  slideArea.focus();
+
+  setTimeout(function () {
+    // remove will-change
+    slideEls.forEach(function (s) { s.style.willChange = ''; });
+    oldSlide.classList.remove('slideshow__slide--exit');
+    isTransitioning = false;
+  }, 400);
+}
+
+function goTo(idx, direction) {
+  if (idx === currentIdx || idx < 0 || idx >= TOTAL || isTransitioning) return;
+  renderSlide(idx, direction);
+}
+
+function goNext() { goTo(currentIdx + 1, 1); }
+function goPrev() { goTo(currentIdx - 1, -1); }
+
+/* ── Keyboard ── */
+function onKeyDown(e) {
+  if (slideshowSection.classList.contains('section--hidden')) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+  else if (e.key === 'Escape') { e.preventDefault(); backToCover(); }
+}
+
+/* ── Swipe ── */
+(function setupSwipe() {
+  var startX = 0;
+  var startY = 0;
+  var SWIPE_THRESHOLD = 50;
+
+  slideArea.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  slideArea.addEventListener('touchend', function (e) {
+    if (e.changedTouches.length !== 1) return;
+    var dx = e.changedTouches[0].clientX - startX;
+    var dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < 0) goNext();
+    else goPrev();
+  }, { passive: true });
+})();
+
+/* ── Transition to slideshow ── */
+function startSlideshow() {
+  coverSection.classList.add('section--hidden');
+  slideshowSection.classList.remove('section--hidden');
+  slideArea.focus();
+  renderSlide(0);
+  document.addEventListener('keydown', onKeyDown);
+}
+
+function backToCover() {
+  slideshowSection.classList.add('section--hidden');
+  coverSection.classList.remove('section--hidden');
+  document.removeEventListener('keydown', onKeyDown);
+  // reset slideshow
+  slideEls.forEach(function (s) { s.classList.remove('slideshow__slide--active', 'slideshow__slide--exit'); });
+  slideEls[0].classList.add('slideshow__slide--active');
+  thumbEls.forEach(function (t, i) { t.classList.toggle('thumbs__item--active', i === 0); });
+  currentIdx = 0;
+  updateHUD(0);
+  startBtn.focus();
+}
+
+/* ── Buttons ── */
+prevBtn.addEventListener('click', goPrev);
+nextBtn.addEventListener('click', goNext);
+backBtn.addEventListener('click', backToCover);
+startBtn.addEventListener('click', startSlideshow);
+
+/* ── Init ── */
+function init() {
+  buildSlides();
+  setupLazyLoader();
+  updateHUD(0);
+  // preload first few
+  preloadImage(SLIDE_FILES[0]);
+  preloadImage(SLIDE_FILES[1]);
+
+  // set initial active slide
+  slideEls[0].classList.add('slideshow__slide--active');
+
+  // trigger cover animations
+  requestAnimationFrame(function () {
+    coverSection.classList.add('cover--ready');
+  });
+
+  // make slideArea focusable
+  slideArea.setAttribute('tabindex', '-1');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+})();
+</script>
+</body>
+</html>
